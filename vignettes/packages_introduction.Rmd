@@ -1,0 +1,36 @@
+---
+title: "Package Introduction"
+output: rmarkdown::html_vignette
+author: Josh McCormick
+date: May 2, 2022
+vignette: >
+  %\VignetteIndexEntry{packages_introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(terminaldigits)
+```
+
+The package `terminaldigits` implements simulated tests of uniformity and independence for terminal digits. `terminaldigits` also implements Monte Carlo simulations for type I errors and power (under certian deviations) for the test of independence. Simulations are run in C++ utilizing Rcpp. 
+
+## Uniformity
+
+When numbers are recorded with sufficient precision, for a wide range of data generating processes, terminal digits are uniformly distributed. Deviations from this distribution could indicate data quality issues. `terminaldigits` utilizes Pearson's chi-squared test of goodness-of-fit to assess the hypothesis that terminal digits are uniformly distributed. Rather than rely on the asymptotic approximation to the chi-squared distribution, `terminaldigits` utilizes the simulated chi-squared GOF test from the package `discretefit`.
+
+
+
+
+
+
+
+
+
