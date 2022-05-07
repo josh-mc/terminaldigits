@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+
 // [[Rcpp::export]]
 
 List int_dec(NumericVector s,
@@ -24,7 +25,7 @@ List int_dec(NumericVector s,
 
   IntegerVector dec_f = s_f - int_f;
 
-  List out = List::create(Named("s_f") = dec_f,
+  List out = List::create(Named("s_f") = s_f,
                           Named("int_f") = int_f,
                           Named("dec_f") = dec_f);
 

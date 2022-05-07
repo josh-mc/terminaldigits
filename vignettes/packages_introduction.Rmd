@@ -133,20 +133,9 @@ The `td_simulate` function can draw samples from a normal distribution with the 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 ## References 
 
-Agresti, A., Wackerly, D., & Boyett, J. M. (1979). Exact conditional tests for cross-classifications: approximation of attained significance levels.Psychometrika, 44(1), 75-83.
+Agresti, A., Wackerly, D., & Boyett, J. M. (1979). Exact conditional tests for cross-classifications: approximation of attained significance levels. Psychometrika, 44(1), 75-83.
 
 Boyett, J. M. (1979). Algorithm AS 144: Random r × c tables with
 given row and column totals. Journal of the Royal Statistical Society.
