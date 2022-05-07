@@ -19,7 +19,7 @@ is set to 10,000.}
 whether a statistic for a simulation is greater than or equal to the
 statistic for the observed data. The default is identical to the tolerance
 set for simulations in the \code{chisq.test} function from the \code{stats}
-package in base R.}
+package in R.}
 }
 \value{
 A list containing the following components:
@@ -27,8 +27,6 @@ A list containing the following components:
 \item{statistic}{the value of the test statistic}
 \item{p_value}{the simulated p-value for the test}
 \item{test}{a character string identifying the test}
-
-
 }
 \description{
 The \code{td_uniformity} function tests the uniformity of terminal digits via

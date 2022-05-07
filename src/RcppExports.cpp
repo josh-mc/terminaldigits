@@ -173,6 +173,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// observed_vec
+IntegerVector observed_vec(IntegerVector u_int, IntegerVector u_dec, IntegerVector u_sam, IntegerVector tab_sam);
+RcppExport SEXP _terminaldigits_observed_vec(SEXP u_intSEXP, SEXP u_decSEXP, SEXP u_samSEXP, SEXP tab_samSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type u_int(u_intSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type u_dec(u_decSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type u_sam(u_samSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type tab_sam(tab_samSEXP);
+    rcpp_result_gen = Rcpp::wrap(observed_vec(u_int, u_dec, u_sam, tab_sam));
+    return rcpp_result_gen;
+END_RCPP
+}
 // full_vec
 IntegerVector full_vec(IntegerVector int_1, IntegerVector dec_1);
 RcppExport SEXP _terminaldigits_full_vec(SEXP int_1SEXP, SEXP dec_1SEXP) {
@@ -275,6 +289,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_terminaldigits_perm_basic", (DL_FUNC) &_terminaldigits_perm_basic, 9},
     {"_terminaldigits_terminal_independence", (DL_FUNC) &_terminaldigits_terminal_independence, 5},
     {"_terminaldigits_int_dec", (DL_FUNC) &_terminaldigits_int_dec, 2},
+    {"_terminaldigits_observed_vec", (DL_FUNC) &_terminaldigits_observed_vec, 4},
     {"_terminaldigits_full_vec", (DL_FUNC) &_terminaldigits_full_vec, 2},
     {"_terminaldigits_actual_frac", (DL_FUNC) &_terminaldigits_actual_frac, 3},
     {"_terminaldigits_tab_it", (DL_FUNC) &_terminaldigits_tab_it, 4},

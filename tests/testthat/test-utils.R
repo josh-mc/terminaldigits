@@ -286,5 +286,78 @@ test_that("actual_frac works", {
 })
 
 
+test_that("observed_vec gives expect result", {
 
+  u_int <- c(-2, 3, 4, 13)
+  u_dec <- c(1, 2, 3, 4)
+  u_sam <- c(-21, -24, 33, 42, 131, 132, 134)
+  tab_sam <- c(1, 1, 1, 2, 1, 1, 1)
+
+  #For vec: -21, -22, -23, -24,
+  #         31, 32, 33, 34,
+  #         41, 42, 43, 44,
+  #         81, 82, 83, 84
+
+  a <- c(1, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0, 0, 1, 1, 0, 1)
+
+  b <- observed_vec(u_int, u_dec, u_sam, tab_sam)
+
+  expect_equal(a, b)
+
+
+})
+
+
+test_that("observed_vec gives same result as in R", {
+
+              set.seed(490)
+
+              x <- rnorm(300, mean = 54, sd = 14)
+
+              #For one decimal
+
+              sam <- as.integer(x * 10)
+              int <- as.integer(x)
+              dec <- sam - int * 10
+
+              tab_sam <- table(sam)
+              tab_int <- table(int)
+              tab_dec <- table(dec)
+
+              u_int <- sort(unique(int))
+              u_dec <- sort(unique(dec))
+              u_sam <- sort(unique(sam))
+
+              #This creates a vector of counts for all possible cells
+
+              observed <- data.frame(v = 1:(length(u_int) * length(u_dec)))
+
+              count <- 1
+
+              for(i in u_int)  {
+
+                for(j in u_dec)  {
+
+                  num <- as.character((i * 10) + j)
+
+                  observed$num[count] <- num
+                  observed$value[count] <- as.integer(tab_sam[num])
+
+                  if(is.na(observed$value[count])) {
+
+                    observed$value[count] <- 0
+
+                  }
+
+                  count <- count + 1
+
+                }}
+
+              a <- observed$value
+
+              b <- observed_vec(u_int, u_dec, u_sam, tab_sam)
+
+              expect_equal(a, b)
+
+            })
 

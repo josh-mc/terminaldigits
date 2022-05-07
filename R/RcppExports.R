@@ -49,6 +49,10 @@ int_dec <- function(s, decimals) {
     .Call('_terminaldigits_int_dec', PACKAGE = 'terminaldigits', s, decimals)
 }
 
+observed_vec <- function(u_int, u_dec, u_sam, tab_sam) {
+    .Call('_terminaldigits_observed_vec', PACKAGE = 'terminaldigits', u_int, u_dec, u_sam, tab_sam)
+}
+
 full_vec <- function(int_1, dec_1) {
     .Call('_terminaldigits_full_vec', PACKAGE = 'terminaldigits', int_1, dec_1)
 }

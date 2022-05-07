@@ -23,7 +23,7 @@
 #'    whether a statistic for a simulation is greater than or equal to the
 #'    statistic for the observed data. The default is identical to the tolerance
 #'    set for simulations in the `chisq.test` function from the `stats`
-#'    package in base R.
+#'    package in R.
 #'
 #' @return A list containing the following components:
 #'

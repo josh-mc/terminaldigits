@@ -24,7 +24,7 @@ List int_dec(NumericVector s,
 
   IntegerVector dec_f = s_f - int_f;
 
-  List out = List::create(Named("s_f") = s_f,
+  List out = List::create(Named("s_f") = dec_f,
                           Named("int_f") = int_f,
                           Named("dec_f") = dec_f);
 
@@ -32,6 +32,65 @@ List int_dec(NumericVector s,
 
 }
 
+// [[Rcpp::export]]
+
+IntegerVector observed_vec(IntegerVector u_int,
+                           IntegerVector u_dec,
+                           IntegerVector u_sam,
+                           IntegerVector tab_sam) {
+
+  int n = u_int.size() * u_dec.size();
+  IntegerVector out(n);
+
+  int count = 0;
+  int cc = 0;
+
+  for(int i = 0; i < u_int.size(); ++i)  {
+
+    for(int j = 0; j < u_dec.size(); ++j)  {
+
+      int a = u_int(i);
+      int b = u_dec(j);
+
+      int k = 0;
+
+      if(a >= 0)  {
+
+        k = (a * 10) + b;
+
+      }
+
+      // So that with negative integers -1 and the decimal 2 leads to -12, not -8
+
+      else {
+
+        k = (a * 10) - b;
+
+      }
+
+      //Rcout << "The value of u_sam[cc] : " << u_sam[cc] << "\n";
+
+      if(k == u_sam[cc]) {
+
+        out[count] = tab_sam[cc];
+
+        cc = cc + 1;
+
+      }
+
+      else {
+
+        out[count] = 0;
+
+      }
+
+      count = count + 1;
+
+      }
+  }
+
+  return out;
+}
 
 
 // [[Rcpp::export]]

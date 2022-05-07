@@ -101,11 +101,11 @@ DataFrame perm_basic(int distribution,
 
     //Generating vector from which to draw.
 
+    //Adding one below b/c tab_it doesn't count zeros.
+
     IntegerVector to_draw = out_vector_cpp(c_sums_t) + 1;
 
     for(int i = 0; i < reps; ++i)  {
-
-      //Adding one below b/c tab_it doesn't count zeros.
 
       IntegerVector shuffled_num = perm_vector(to_draw, r_sums_t, c_sums_t);
 
@@ -257,13 +257,6 @@ List terminal_independence(NumericVector x,
 
     switch(type) {
 
-    case 1:
-
-      return chisq_stat(n,
-                        actual_frac_d,
-                        expected_frac);
-      break;
-
     case 2:
 
       return g2_stat(n,
@@ -285,6 +278,14 @@ List terminal_independence(NumericVector x,
       return rms_stat(n,
                       actual_frac_d,
                       expected_frac);
+
+    default:
+
+      return chisq_stat(n,
+                        actual_frac_d,
+                        expected_frac);
+
+
     }
 
 
@@ -302,7 +303,9 @@ List terminal_independence(NumericVector x,
 
   //Generating vector from which to draw.
 
-  IntegerVector to_draw = out_vector_cpp(c_sums_t);
+  //Adding one below b/c tab_it doesn't count zeros.
+
+  IntegerVector to_draw = out_vector_cpp(c_sums_t) + 1;
 
   for(int i = 0; i < reps; ++i)  {
 
@@ -312,9 +315,7 @@ List terminal_independence(NumericVector x,
 
     }
 
-    //Adding one below b/c tab_it doesn't count zeros.
-
-    IntegerVector shuffled_num = perm_vector(to_draw + 1, r_sums_t, c_sums_t);
+    IntegerVector shuffled_num = perm_vector(to_draw, r_sums_t, c_sums_t);
 
     NumericVector actual_frac_x = as<NumericVector>(shuffled_num) / n;
 

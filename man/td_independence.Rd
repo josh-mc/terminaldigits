@@ -31,7 +31,7 @@ statistic ("RMS").}
 whether a statistic for a simulation is greater than or equal to the
 statistic for the observed data. The default is identical to the tolerance
 set for simulations in the \code{chisq.test} function from the \code{stats}
-package in base R.}
+package in R.}
 }
 \value{
 A list containing the following components:

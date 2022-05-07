@@ -38,7 +38,7 @@ statistic ("RMS").}
 whether a statistic for a simulation is greater than or equal to the
 statistic for the observed data. The default is identical to the tolerance
 set for simulations in the \code{chisq.test} function from the \code{stats}
-package in base R.}
+package in R.}
 }
 \value{
 A data frame containing the following components:
@@ -59,7 +59,7 @@ and Hochberg, 1995) are reported.
 }
 \examples{
 
-td_tests(decoy, weight, decimals = 2, group = workroom, reps = 1000)
+td_tests(decoy, weight, decimals = 2, group = subject, reps = 1000)
 
 }
 \references{

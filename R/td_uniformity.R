@@ -22,15 +22,7 @@
 #' \item{p_value}{the simulated p-value for the test}
 #' \item{test}{a character string identifying the test}
 #'
-#' @references
 #'
-#' Agresti, A., Wackerly, D., & Boyett, J. M. (1979). Exact conditional tests
-#'     for cross-classifications: approximation of attained significance levels.
-#'     Psychometrika, 44(1), 75-83.
-#'
-#' Boyett, J. M. (1979). Algorithm AS 144: Random r × c tables with
-#'     given row and column totals. Journal of the Royal Statistical Society.
-#'     Series C (Applied Statistics), 28(3), 329-332.
 #'
 #' @export
 #'
