@@ -227,11 +227,18 @@ List terminal_independence(NumericVector x,
   IntegerVector int_1 = a["int_f"];
   IntegerVector dec_1 = a["dec_f"];
 
-  // Here we generate the expected fractions.
-  // Row sums are preceding digits. Column sums are terminal digits.
+  IntegerVector u_sam = sort_unique(sample_1);
+  IntegerVector u_int = sort_unique(int_1);
+  IntegerVector u_dec = sort_unique(dec_1);
+
+  /* Here we generate the expected fractions.
+   * Row sums are preceding digits. Column sums are terminal digits.
+   */
 
   IntegerVector r_sums_t = table(int_1);
   IntegerVector c_sums_t = table(dec_1);
+  IntegerVector s_sums_t = table(sample_1);
+
 
   NumericVector r_frac = as<NumericVector>(r_sums_t) / n;
   NumericVector c_frac = as<NumericVector>(c_sums_t) / n;
@@ -240,15 +247,22 @@ List terminal_independence(NumericVector x,
 
   NumericVector expected_frac = expected_cells(r_frac, c_frac);
 
-  // Take the full vector, i.e. all possible bins for each preceding digit
+  // Observed counts including counts for empty cells
 
-  IntegerVector full_vec_1 = full_vec(int_1, dec_1);
+  IntegerVector observed_counts = observed_vec(u_int / 10,
+                                               u_dec,
+                                               u_sam,
+                                               s_sums_t);
 
-  //Now take the actual fraction, a vector of the same length as the full vector
-  //where the actual counts for each occupied bin are displayed as fractions.
+  Rcout << "The value of u_int : " << u_int << "\n";
+  Rcout << "The value of u_dec : " << u_dec << "\n";
+  Rcout << "The value of u_sam : " << u_sam << "\n";
+  Rcout << "The value of s_sums_t : " << s_sums_t << "\n";
+  Rcout << "The value of observed_counts : " << observed_counts << "\n";
 
-  NumericVector actual_frac_d = actual_frac(full_vec_1, sample_1, n);
 
+  NumericVector actual_frac = as<NumericVector>(observed_counts);
+  NumericVector actual_frac_d = actual_frac / n;
 
   auto stat_fun = [&](int type,
                       NumericVector actual_frac_d,

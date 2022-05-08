@@ -23,11 +23,12 @@ List int_dec(NumericVector s,
 
   // Subtracting integers from sample to get decimals
 
-  IntegerVector dec_f = s_f - int_f;
+  NumericVector dec_f = Rcpp::abs(s_f - int_f);
+  IntegerVector dec_g = as<IntegerVector>(dec_f);
 
   List out = List::create(Named("s_f") = s_f,
                           Named("int_f") = int_f,
-                          Named("dec_f") = dec_f);
+                          Named("dec_f") = dec_g);
 
   return out;
 
@@ -53,6 +54,9 @@ IntegerVector observed_vec(IntegerVector u_int,
       int a = u_int(i);
       int b = u_dec(j);
 
+      Rcout << "The value of a : " << a << "\n";
+      Rcout << "The value of b : " << b << "\n";
+
       int k = 0;
 
       if(a >= 0)  {
@@ -69,7 +73,8 @@ IntegerVector observed_vec(IntegerVector u_int,
 
       }
 
-      //Rcout << "The value of u_sam[cc] : " << u_sam[cc] << "\n";
+      Rcout << "The value of k : " << k << "\n";
+      Rcout << "The value of u_sam[cc] : " << u_sam[cc] << "\n";
 
       if(k == u_sam[cc]) {
 

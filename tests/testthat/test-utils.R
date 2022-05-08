@@ -271,6 +271,28 @@ test_that("int_dec works: three decimals", {
 })
 
 
+test_that("int_dec works: negative values", {
+
+  x <- c(-1.12345, -1.2343, 2.12345, 3.82345)
+
+  a <- int_dec(x, decimals = 1)
+
+  #Sample
+  b <- c(-11, -12, 21, 38)
+
+  # Integer
+  c <- c(-10, -10, 20, 30)
+
+  # Decimals
+  d <- c(1, 2, 1, 8)
+
+  expect_equal(a$s_f, b)
+  expect_equal(a$int_f, c)
+  expect_equal(a$dec_f, d)
+
+})
+
+
 test_that("actual_frac works", {
 
   p <- 1:10
@@ -312,20 +334,20 @@ test_that("observed_vec gives same result as in R", {
 
               set.seed(490)
 
-              x <- rnorm(300, mean = 54, sd = 14)
+              x <- rnorm(30, mean = 14, sd = 14)
 
               #For one decimal
 
               sam <- as.integer(x * 10)
               int <- as.integer(x)
-              dec <- sam - int * 10
+              dec <- as.integer(sam - int * 10)
 
               tab_sam <- table(sam)
               tab_int <- table(int)
               tab_dec <- table(dec)
 
               u_int <- sort(unique(int))
-              u_dec <- sort(unique(dec))
+              u_dec <- sort(abs(unique(dec)))
               u_sam <- sort(unique(sam))
 
               #This creates a vector of counts for all possible cells
