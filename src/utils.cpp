@@ -27,7 +27,7 @@ List int_dec(NumericVector s,
   IntegerVector dec_g = as<IntegerVector>(dec_f);
 
   List out = List::create(Named("s_f") = s_f,
-                          Named("int_f") = int_f,
+                          Named("int_f") = int_1,
                           Named("dec_f") = dec_g);
 
   return out;
@@ -41,27 +41,26 @@ IntegerVector observed_vec(IntegerVector u_int,
                            IntegerVector u_sam,
                            IntegerVector tab_sam) {
 
-  int n = u_int.size() * u_dec.size();
+  IntegerVector neg_dec = Rcpp::clone(u_dec).sort(true);
+
+  int n_int = u_int.size();
+  int n_dec = u_dec.size();
+  int n_sam = u_sam.size();
+  int n = n_int * n_dec;
   IntegerVector out(n);
 
   int count = 0;
   int cc = 0;
 
-  for(int i = 0; i < u_int.size(); ++i)  {
+  for(int i = 0; i < n_int; ++i)  {
 
-    for(int j = 0; j < u_dec.size(); ++j)  {
-
-      int a = u_int(i);
-      int b = u_dec(j);
-
-      Rcout << "The value of a : " << a << "\n";
-      Rcout << "The value of b : " << b << "\n";
+    for(int j = 0; j < n_dec; ++j)  {
 
       int k = 0;
 
-      if(a >= 0)  {
+      if(u_int(i) >= 0)  {
 
-        k = (a * 10) + b;
+        k = (u_int(i) * 10) + u_dec(j);
 
       }
 
@@ -69,16 +68,18 @@ IntegerVector observed_vec(IntegerVector u_int,
 
       else {
 
-        k = (a * 10) - b;
+        k = (u_int(i) * 10) - neg_dec(j);
 
       }
 
-      Rcout << "The value of k : " << k << "\n";
-      Rcout << "The value of u_sam[cc] : " << u_sam[cc] << "\n";
+      if (cc >= n_sam) {
 
-      if(k == u_sam[cc]) {
+        out(count) = 0;
+      }
 
-        out[count] = tab_sam[cc];
+      else if (k == u_sam(cc)) {
+
+        out(count) = tab_sam(cc);
 
         cc = cc + 1;
 
@@ -86,7 +87,7 @@ IntegerVector observed_vec(IntegerVector u_int,
 
       else {
 
-        out[count] = 0;
+        out(count) = 0;
 
       }
 
@@ -95,8 +96,13 @@ IntegerVector observed_vec(IntegerVector u_int,
       }
   }
 
-  return out;
-}
+
+    return out;
+  }
+
+
+
+
 
 
 // [[Rcpp::export]]

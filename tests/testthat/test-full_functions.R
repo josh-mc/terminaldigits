@@ -25,11 +25,11 @@ test_that("perm basic produces same results", {
 
               set.seed(490)
 
-              x <- rnorm(300, mean = 10, sd = 14)
+              x <- rnorm(300, mean = 100, sd = 14)
 
               #For one decimal
 
-              sam <- as.integer(x * 10)
+              sam <- as.numeric(as.integer(x * 10))
               int <- as.integer(x)
               dec <- sam - int * 10
 
@@ -72,16 +72,17 @@ test_that("perm basic produces same results", {
 
               set.seed(202)
 
-              a <- td_independence(x = sam * 0.1,
-                                   decimals = 1,
-                                   reps = 10000)
+              a <- td_independence(sam,
+                                   decimals = 0,
+                                   reps = 10000)$p.value
 
-              b <- chisq.test(mat, simulate.p.value = TRUE, B = 10000)
+              b <- 0.109589
+              #Previous value
+
+              #b <- chisq.test(mat, simulate.p.value = TRUE, B = 10000)$p.value
+              # 0.111888
 
               expect_equal(a, b, tolerance = 0.01)
             })
-
-
-
 
 

@@ -39,9 +39,12 @@ DataFrame perm_basic(int distribution,
 
     // Taking the unique length for the draw
 
-    IntegerVector uni_d = unique(sample_1);
-
+    IntegerVector uni_d = sort_unique(sample_1);
     int d_length = uni_d.size();
+
+
+    IntegerVector u_int = sort_unique(int_1);
+    IntegerVector u_dec = sort_unique(dec_1);
 
     // And the average frequency for the draw
 
@@ -52,6 +55,7 @@ DataFrame perm_basic(int distribution,
 
     IntegerVector r_sums_t = table(int_1);
     IntegerVector c_sums_t = table(dec_1);
+    IntegerVector s_sums_t = table(sample_1);
 
     NumericVector r_frac = as<NumericVector>(r_sums_t) / sum(r_sums_t);
     NumericVector c_frac = as<NumericVector>(c_sums_t) / sum(c_sums_t);
@@ -60,17 +64,19 @@ DataFrame perm_basic(int distribution,
 
     NumericVector expected_frac = expected_cells(r_frac, c_frac);
 
-    int n_bins = expected_frac.size();
+    /* Now take the actual fraction, a vector of the same length as the full vector
+     * where the actual counts for each occupied bin are displayed as fractions.
+     */
 
-    // Take the full vector, i.e. all possible bins for each integer
+    // Observed counts including counts for empty cells
 
-    IntegerVector full_vec_1 = full_vec(int_1, dec_1);
+    IntegerVector observed_counts = observed_vec(u_int,
+                                                 u_dec,
+                                                 uni_d,
+                                                 s_sums_t);
 
-    //Now take the actual fraction, a vector of the same length as the full vector
-    //where the actual counts for each occupied bin are displayed as fractions.
-
-    NumericVector actual_frac_d = actual_frac(full_vec_1, sample_1, n);
-
+    NumericVector actual_frac = as<NumericVector>(observed_counts);
+    NumericVector actual_frac_d = actual_frac / n;
 
     double chi_gof_d = chisq_stat(n,
                                   actual_frac_d,
@@ -249,7 +255,7 @@ List terminal_independence(NumericVector x,
 
   // Observed counts including counts for empty cells
 
-  IntegerVector observed_counts = observed_vec(u_int / 10,
+  IntegerVector observed_counts = observed_vec(u_int,
                                                u_dec,
                                                u_sam,
                                                s_sums_t);

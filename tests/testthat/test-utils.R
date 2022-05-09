@@ -217,7 +217,7 @@ test_that("int_dec works: one decimal", {
   b <- c(11, 21, 38)
 
   # Integer
-  c <- c(10, 20, 30)
+  c <- c(1, 2, 3)
 
   # Decimals
   d <- c(1, 1, 8)
@@ -238,7 +238,7 @@ test_that("int_dec works: two decimals", {
   b <- c(112, 212, 385)
 
   # Integer
-  c <- c(110, 210, 380)
+  c <- c(11, 21, 38)
 
   # Decimals
   d <- c(2, 2, 5)
@@ -259,7 +259,7 @@ test_that("int_dec works: three decimals", {
   b <- c(1123, 2127, 3853)
 
   # Integer
-  c <- c(1120, 2120, 3850)
+  c <- c(112, 212, 385)
 
   # Decimals
   d <- c(3, 7, 3)
@@ -281,7 +281,7 @@ test_that("int_dec works: negative values", {
   b <- c(-11, -12, 21, 38)
 
   # Integer
-  c <- c(-10, -10, 20, 30)
+  c <- c(-1, -1, 2, 3)
 
   # Decimals
   d <- c(1, 2, 1, 8)
@@ -312,15 +312,15 @@ test_that("observed_vec gives expect result", {
 
   u_int <- c(-2, 3, 4, 13)
   u_dec <- c(1, 2, 3, 4)
-  u_sam <- c(-21, -24, 33, 42, 131, 132, 134)
-  tab_sam <- c(1, 1, 1, 2, 1, 1, 1)
+  u_sam <- c(-24, -21, 33, 42, 131, 132, 134)
+  tab_sam <- c(1, 3, 1, 2, 1, 1, 1)
 
   #For vec: -21, -22, -23, -24,
-  #         31, 32, 33, 34,
-  #         41, 42, 43, 44,
-  #         81, 82, 83, 84
+  #         31,  32,  33,  34,
+  #         41,  42,  43,  44,
+  #         131, 132, 133, 134
 
-  a <- c(1, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0, 0, 1, 1, 0, 1)
+  a <- c(1, 0, 0, 3, 0, 0, 1, 0, 0, 2, 0, 0, 1, 1, 0, 1)
 
   b <- observed_vec(u_int, u_dec, u_sam, tab_sam)
 
@@ -330,11 +330,12 @@ test_that("observed_vec gives expect result", {
 })
 
 
-test_that("observed_vec gives same result as in R", {
+test_that("observed_vec gives same result as in R
+          (for positive values)", {
 
               set.seed(490)
 
-              x <- rnorm(30, mean = 14, sd = 14)
+              x <- rnorm(100, mean = 100, sd = 5)
 
               #For one decimal
 
@@ -347,7 +348,7 @@ test_that("observed_vec gives same result as in R", {
               tab_dec <- table(dec)
 
               u_int <- sort(unique(int))
-              u_dec <- sort(abs(unique(dec)))
+              u_dec <- sort(unique(abs(dec)))
               u_sam <- sort(unique(sam))
 
               #This creates a vector of counts for all possible cells
@@ -355,6 +356,8 @@ test_that("observed_vec gives same result as in R", {
               observed <- data.frame(v = 1:(length(u_int) * length(u_dec)))
 
               count <- 1
+
+              #This R code only works if there are no negative values.
 
               for(i in u_int)  {
 
@@ -382,4 +385,76 @@ test_that("observed_vec gives same result as in R", {
               expect_equal(a, b)
 
             })
+
+test_that("observed_vec gives same result for shifted mean", {
+
+            set.seed(490)
+
+            x <- rnorm(100, mean = 100, sd = 5)
+
+            #For one decimal
+
+            sam <- as.integer(x * 10)
+            int <- as.integer(x)
+            dec <- as.integer(sam - int * 10)
+
+            tab_sam <- table(sam)
+
+            u_int <- sort(unique(int))
+            u_dec <- sort(unique(abs(dec)))
+            u_sam <- sort(unique(sam))
+
+            a <- observed_vec(u_int, u_dec, u_sam, tab_sam)
+
+            #Now shifting mean so we have negative values
+
+
+            sam <- as.integer((x * 10) - 30)
+            int <- as.integer(x - 30)
+            dec <- as.integer(sam - int * 10)
+
+            tab_sam <- table(sam)
+
+            u_int <- sort(unique(int))
+            u_dec <- sort(unique(abs(dec)))
+            u_sam <- sort(unique(sam))
+
+            b <- observed_vec(u_int, u_dec, u_sam, tab_sam)
+
+            expect_equal(a, b)
+
+          })
+
+
+test_that("observed_vec gives expected result for vector", {
+
+            u_int <- as.integer(c(1, 4, 7, 18))
+            u_dec <- as.integer(c(0, 1, 2))
+            u_sam <- as.integer(c(11, 12, 40, 70, 71, 180))
+            tab_sam <- table(c(71, 70, 70, 40, 11, 11, 12, 12, 12, 12, 12, 12, 180))
+
+            a <- c(0, 2, 6, 1, 0, 0, 2, 1, 0, 1, 0, 0)
+
+            b <- observed_vec(u_int, u_dec, u_sam, tab_sam)
+
+            expect_equal(a, b)
+
+          })
+
+
+test_that("observed_vec gives expected result for vector
+          with negative values", {
+
+  u_int <- as.integer(c(-7, -4, 1, 18))
+  u_dec <- as.integer(c(0, 1, 2))
+  u_sam <- as.integer(c(-71, -70, -40, 11, 12, 180))
+  tab_sam <- table(c(-71, -70, -70, -40, 11, 11, 12, 12, 12, 12, 12, 12, 180))
+
+  a <- c(0, 1, 2, 0, 0, 1, 0, 2, 6, 1, 0, 0)
+
+  b <- observed_vec(u_int, u_dec, u_sam, tab_sam)
+
+  expect_equal(a, b)
+
+})
 
