@@ -94,7 +94,9 @@ Asymptotically, the first three of these statistic approximate the chi-squared d
 As an example, again take the `decoy` data set. There is strong evidence here that terminal digits are not independent of preceding digits.
 
 ```{r}
+bench::system_time(
 td_independence(decoy$weight, decimals = 2)
+)
 ```
 
 ## Simulations
@@ -107,8 +109,6 @@ One possibility is to simulate type I errors under a given data generating proce
 d_mean <- mean(decoy$weight, na.rm = TRUE)
 d_sd <- sd(decoy$weight, na.rm = TRUE)
 
-d_mean
-d_sd
 ```
 
 ```{r}
@@ -129,6 +129,7 @@ decoy %>%
       legend.title = element_blank())
 
 ```
+
 The `td_simulate` function can draw samples from a normal distribution with the given mean and standard deviation. For each draw, the test of independence is applied. This provides type I errors. For the traditional significance level of 0.05, approximately 5 percent of draws should be statistically significant but not more.
 
 

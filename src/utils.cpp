@@ -101,61 +101,6 @@ IntegerVector observed_vec(IntegerVector u_int,
   }
 
 
-
-
-
-
-// [[Rcpp::export]]
-
-IntegerVector full_vec(IntegerVector int_1,
-                       IntegerVector dec_1)  {
-
-  IntegerVector int_uni_x = sort_unique(int_1);
-  IntegerVector dec_uni_x = sort_unique(dec_1);
-  IntegerVector int_vec_x = rep_each(int_uni_x, dec_uni_x.size());
-  IntegerVector dec_vec_x = rep(dec_uni_x, int_uni_x.size());
-  IntegerVector full_vec = int_vec_x + dec_vec_x;
-
-  return(full_vec);
-
-}
-
-
-// [[Rcpp::export]]
-
-NumericVector actual_frac(IntegerVector int_full,
-                          IntegerVector dec,
-                          int new_n)  {
-
-  IntegerVector uni_1 = sort_unique(dec);
-  IntegerVector mat_0 = match(int_full, uni_1);
-  IntegerVector mat_1 = ifelse(is_na(mat_0), 0, mat_0);
-
-  IntegerVector tab_1 = table(dec);
-  NumericVector vector_1_bins(int_full.size());
-
-  for(int i = 0; i < int_full.size(); ++i)  {
-
-    if(mat_1(i) > 0) {
-
-      vector_1_bins(i) = tab_1(mat_1(i) - 1);
-
-    }
-
-    else {
-
-      vector_1_bins(i) = 0;
-
-    }
-
-  }
-
-  NumericVector vec_1_frac = vector_1_bins / new_n;
-
-  return vec_1_frac;
-
-}
-
 // [[Rcpp::export]]
 
 IntegerVector tab_it(IntegerVector x, int bins, int a, int b) {

@@ -260,13 +260,6 @@ List terminal_independence(NumericVector x,
                                                u_sam,
                                                s_sums_t);
 
-  Rcout << "The value of u_int : " << u_int << "\n";
-  Rcout << "The value of u_dec : " << u_dec << "\n";
-  Rcout << "The value of u_sam : " << u_sam << "\n";
-  Rcout << "The value of s_sums_t : " << s_sums_t << "\n";
-  Rcout << "The value of observed_counts : " << observed_counts << "\n";
-
-
   NumericVector actual_frac = as<NumericVector>(observed_counts);
   NumericVector actual_frac_d = actual_frac / n;
 

@@ -14,30 +14,7 @@ List int_dec(NumericVector s,
 #endif
 
 
-#ifndef FULL_VEC
-#define FULL_VEC
 
-#include <Rcpp.h>
-using namespace Rcpp;
-
-IntegerVector full_vec(IntegerVector int_1,
-                       IntegerVector dec_1);
-
-
-#endif
-
-
-#ifndef ACTUAL_FRAC
-#define ACTUAL_FRAC
-
-#include <Rcpp.h>
-using namespace Rcpp;
-
-NumericVector actual_frac(IntegerVector int_full,
-                          IntegerVector dec,
-                          int new_n);
-
-#endif
 
 #ifndef OBSERVED_VEC
 #define OBSERVED_VEC

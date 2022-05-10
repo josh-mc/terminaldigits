@@ -16,30 +16,6 @@ out_vector_r <- function(c_sum)  {
 }
 
 
-test_that("full_vec = example_1", {
-
-  x <- c(20, 40, 20, 20, 40, 90)
-  boot <- c(0:9)
-
-  a <- full_vec(x, boot)
-
-  b <- c(20:29, 40:49, 90:99)
-
-  expect_equal(a, b)
-})
-
-
-test_that("full_vec = correct length", {
-
-  x <- c(1:8)
-  boot <- c(1, 2, 5, 7, 8)
-
-  a <- length(full_vec(x, boot))
-
-  b <- 8 * 5
-
-  expect_equal(a, b)
-})
 
 test_that("vector_out = example_1", {
 
@@ -289,21 +265,6 @@ test_that("int_dec works: negative values", {
   expect_equal(a$s_f, b)
   expect_equal(a$int_f, c)
   expect_equal(a$dec_f, d)
-
-})
-
-
-test_that("actual_frac works", {
-
-  p <- 1:10
-
-  q <- c(1, 1, 3, 4, 5, 6, 6, 6)
-
-  a <- actual_frac(p, q, new_n = 20)
-
-  b <- c(0.1, 0, 0.05, 0.05, 0.05, 0.15, 0, 0, 0, 0)
-
-  expect_equal(a, b)
 
 })
 
