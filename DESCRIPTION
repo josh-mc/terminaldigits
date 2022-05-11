@@ -1,10 +1,10 @@
 Package: terminaldigits
-Title: Tests of uniformity and independence for terminal digits
-Version: 0.1
+Title: Tests of Uniformity and Independence for Terminal Digits
+Version: 0.1.0
 Authors@R: 
     person("Josh", "McCormick", , "josh.mccormick@aya.yale.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2920-1119"))
-Description: Implements simulated tests for the hypothesis that terminal digits are uniformily
+Description: Implements simulated tests for the hypothesis that terminal digits are uniformly
     distributed (chi-squared goodness-of-fit) and the hypothesis that terminal digits
     are independent from preceding digits (several tests of independence for r x c 
     contingency tables). Also, for a number of distributions, implements Monte Carlo 

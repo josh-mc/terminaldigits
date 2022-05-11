@@ -32,7 +32,7 @@ When numbers are recorded with sufficient precision, for a wide range of data ge
 Examples are based on a data set taken from the third round of a decoy experiment involving hand-washing purportedly carried out in a number of factories in China. For details, see `decoy` and Yu, Nelson, and Simonsohn (2018).
 
 ```{r}
-td_uniformity(decoy$weight, decimals = 2)
+td_uniformity(decoy$weight, decimals = 2, reps = 2000)
 ```
 
 ## Independence
@@ -94,7 +94,7 @@ As an example, again take the `decoy` data set. There is strong evidence here th
 
 ```{r}
 
-td_independence(decoy$weight, decimals = 2, reps = 10000)
+td_independence(decoy$weight, decimals = 2, reps = 2000)
 
 ```
 
@@ -104,7 +104,7 @@ Some data generating process produce terminal digits that are dependent on prece
 
 One possibility is to simulate type I errors under a given data generating process. The `decoy` data approximates a normal distribution with a mean of ~54 and standard deviation of ~15.
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE, fig.align='center'}
 
 d_mean <- mean(decoy$weight, na.rm = TRUE)
 d_sd <- sd(decoy$weight, na.rm = TRUE)

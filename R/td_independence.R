@@ -47,7 +47,7 @@
 #'
 #' @examples
 #'
-#' td_independence(decoy$weight, decimals = 2)
+#' td_independence(decoy$weight, decimals = 2, reps = 2000)
 #'
 #' @useDynLib terminaldigits
 #' @importFrom Rcpp sourceCpp

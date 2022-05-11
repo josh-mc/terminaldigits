@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 The package `terminaldigits` implements simulated tests of uniformity
-and independence for terminal digits. For certain paramters,
+and independence for terminal digits. For certain parameters,
 `terminaldigits` also implements Monte Carlo simulations for type I
 errors and power for the test of independence. Simulations are run in
 C++ utilizing Rcpp.

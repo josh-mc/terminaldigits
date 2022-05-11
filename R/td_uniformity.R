@@ -29,7 +29,7 @@
 #'
 #' @examples
 #'
-#' td_uniformity(decoy$weight, decimals = 2)
+#' td_uniformity(decoy$weight, decimals = 2, reps = 2000)
 #'
 #'
 #' @useDynLib terminaldigits
