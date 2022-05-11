@@ -20,7 +20,8 @@
 #'
 #' \item{statistic}{the value of the test statistic}
 #' \item{p_value}{the simulated p-value for the test}
-#' \item{test}{a character string identifying the test}
+#' \item{method}{a character string describing the test}
+#' \item{data.name}{a character string give the name of the data}
 #'
 #'
 #'
@@ -39,13 +40,12 @@ td_uniformity <- function(x,
                           decimals,
                           reps = 10000,
                           tolerance = 64 * .Machine$double.eps)  {
+
+  if(!class(x) %in% c("numeric", "integer" )) {stop("The vector `x` must be numeric")}
+
   if(reps <= 0) {
     stop("The 'reps' parameter requires a positive integer")
 
-  }
-
-  if(reps < 10000) {
-    warning("For precise p-values, a minimum of 10,000 repetitions are recommended")
   }
 
   DNAME <- deparse(substitute(x))
