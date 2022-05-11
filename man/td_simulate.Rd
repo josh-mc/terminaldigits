@@ -32,14 +32,14 @@ duplicates.}
 \item{n}{An integer specifying the number of observes to draw from the distribution.}
 
 \item{parameter_1}{A numeric value specifying the mean for the normal distribution,
-the lower bound of interval for the uniform distribution, and the rate for the
+the lower bound of interval for the uniform distribution, or the rate for the
 exponential distribution.}
 
 \item{parameter_2}{A numeric value specifying the standard deviation for the normal
-distribution and the upper bound of the interval for the uniform distribution.}
+distribution or the upper bound of the interval for the uniform distribution.}
 
 \item{decimals}{an integer specifying the number of decimals (including 0)
-to which the values draw from the distribution should be truncated.}
+to which the values drawn from the distribution should be truncated.}
 
 \item{significance}{a number between 0 and 1 defining the level for
 statistical significance. The default is set to 0.05.}
@@ -57,7 +57,7 @@ appropriate for initial exploration.}
 whether a statistic for a simulation is greater than or equal to the
 statistic for the observed data. The default is identical to the tolerance
 set for simulations in the \code{chisq.test} function from the \code{stats}
-package in base R.}
+package in R.}
 }
 \value{
 A list containing the following components:
@@ -82,6 +82,11 @@ The \code{td_simulate} function performs Monte Carlo simulations to assess
 type I errors and power for tests of independence of terminal digits for
 various truncated continuous distributions.
 }
+\details{
+Monte Carlo simulations for the null hypothesis are implemented for contingency
+tables with fixed margins using algorithm ASA 144 (Agresti, Wackerly, and
+Boyett, 1979; Boyett 1979).
+}
 \examples{
 
 td_simulate(distribution = "normal",
@@ -92,4 +97,13 @@ decimals = 1,
 reps = 100,
 simulations = 100)
 
+}
+\references{
+Agresti, A., Wackerly, D., & Boyett, J. M. (1979). Exact conditional tests
+for cross-classifications: approximation of attained significance levels.
+Psychometrika, 44(1), 75-83.
+
+Boyett, J. M. (1979). Algorithm AS 144: Random r × c tables with
+given row and column totals. Journal of the Royal Statistical Society.
+Series C (Applied Statistics), 28(3), 329-332.
 }

@@ -173,28 +173,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// full_vec
-IntegerVector full_vec(IntegerVector int_1, IntegerVector dec_1);
-RcppExport SEXP _terminaldigits_full_vec(SEXP int_1SEXP, SEXP dec_1SEXP) {
+// observed_vec
+IntegerVector observed_vec(IntegerVector u_int, IntegerVector u_dec, IntegerVector u_sam, IntegerVector tab_sam);
+RcppExport SEXP _terminaldigits_observed_vec(SEXP u_intSEXP, SEXP u_decSEXP, SEXP u_samSEXP, SEXP tab_samSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type int_1(int_1SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type dec_1(dec_1SEXP);
-    rcpp_result_gen = Rcpp::wrap(full_vec(int_1, dec_1));
-    return rcpp_result_gen;
-END_RCPP
-}
-// actual_frac
-NumericVector actual_frac(IntegerVector int_full, IntegerVector dec, int new_n);
-RcppExport SEXP _terminaldigits_actual_frac(SEXP int_fullSEXP, SEXP decSEXP, SEXP new_nSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type int_full(int_fullSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type dec(decSEXP);
-    Rcpp::traits::input_parameter< int >::type new_n(new_nSEXP);
-    rcpp_result_gen = Rcpp::wrap(actual_frac(int_full, dec, new_n));
+    Rcpp::traits::input_parameter< IntegerVector >::type u_int(u_intSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type u_dec(u_decSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type u_sam(u_samSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type tab_sam(tab_samSEXP);
+    rcpp_result_gen = Rcpp::wrap(observed_vec(u_int, u_dec, u_sam, tab_sam));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -248,19 +237,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// RCONT
-List RCONT(int n, IntegerVector r_sum, IntegerVector c_sum);
-RcppExport SEXP _terminaldigits_RCONT(SEXP nSEXP, SEXP r_sumSEXP, SEXP c_sumSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type r_sum(r_sumSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type c_sum(c_sumSEXP);
-    rcpp_result_gen = Rcpp::wrap(RCONT(n, r_sum, c_sum));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_terminaldigits_dist_in", (DL_FUNC) &_terminaldigits_dist_in, 4},
@@ -275,13 +251,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_terminaldigits_perm_basic", (DL_FUNC) &_terminaldigits_perm_basic, 9},
     {"_terminaldigits_terminal_independence", (DL_FUNC) &_terminaldigits_terminal_independence, 5},
     {"_terminaldigits_int_dec", (DL_FUNC) &_terminaldigits_int_dec, 2},
-    {"_terminaldigits_full_vec", (DL_FUNC) &_terminaldigits_full_vec, 2},
-    {"_terminaldigits_actual_frac", (DL_FUNC) &_terminaldigits_actual_frac, 3},
+    {"_terminaldigits_observed_vec", (DL_FUNC) &_terminaldigits_observed_vec, 4},
     {"_terminaldigits_tab_it", (DL_FUNC) &_terminaldigits_tab_it, 4},
     {"_terminaldigits_perm_vector", (DL_FUNC) &_terminaldigits_perm_vector, 3},
     {"_terminaldigits_expected_cells", (DL_FUNC) &_terminaldigits_expected_cells, 2},
     {"_terminaldigits_out_vector_cpp", (DL_FUNC) &_terminaldigits_out_vector_cpp, 1},
-    {"_terminaldigits_RCONT", (DL_FUNC) &_terminaldigits_RCONT, 3},
     {NULL, NULL, 0}
 };
 

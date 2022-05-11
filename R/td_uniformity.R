@@ -20,17 +20,10 @@
 #'
 #' \item{statistic}{the value of the test statistic}
 #' \item{p_value}{the simulated p-value for the test}
-#' \item{test}{a character string identifying the test}
+#' \item{method}{a character string describing the test}
+#' \item{data.name}{a character string give the name of the data}
 #'
-#' @references
 #'
-#' Agresti, A., Wackerly, D., & Boyett, J. M. (1979). Exact conditional tests
-#'     for cross-classifications: approximation of attained significance levels.
-#'     Psychometrika, 44(1), 75-83.
-#'
-#' Boyett, J. M. (1979). Algorithm AS 144: Random r × c tables with
-#'     given row and column totals. Journal of the Royal Statistical Society.
-#'     Series C (Applied Statistics), 28(3), 329-332.
 #'
 #' @export
 #'
@@ -47,13 +40,12 @@ td_uniformity <- function(x,
                           decimals,
                           reps = 10000,
                           tolerance = 64 * .Machine$double.eps)  {
+
+  if(!class(x) %in% c("numeric", "integer" )) {stop("The vector `x` must be numeric")}
+
   if(reps <= 0) {
     stop("The 'reps' parameter requires a positive integer")
 
-  }
-
-  if(reps < 10000) {
-    warning("For precise p-values, a minimum of 10,000 repetitions are recommended")
   }
 
   DNAME <- deparse(substitute(x))

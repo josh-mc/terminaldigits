@@ -42,7 +42,7 @@
 #'
 #' @examples
 #'
-#'td_tests(decoy, weight, decimals = 2, group = workroom, reps = 1000)
+#'td_tests(decoy, weight, decimals = 2, group = subject, reps = 1000)
 #'
 #' @useDynLib terminaldigits
 #' @importFrom Rcpp sourceCpp

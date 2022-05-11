@@ -2,7 +2,7 @@
 title: "Package Introduction"
 output: rmarkdown::html_vignette
 author: Josh McCormick
-date: May 2, 2022
+date: May 11, 2022
 vignette: >
   %\VignetteIndexEntry{packages_introduction}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,21 +16,159 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, warning=FALSE, message=FALSE}
 library(terminaldigits)
+library(dplyr)
+library(gt)
+library(ggplot2)
 ```
 
-The package `terminaldigits` implements simulated tests of uniformity and independence for terminal digits. `terminaldigits` also implements Monte Carlo simulations for type I errors and power (under certian deviations) for the test of independence. Simulations are run in C++ utilizing Rcpp. 
+The package `terminaldigits` implements simulated tests of uniformity and independence for terminal digits. `terminaldigits` also implements Monte Carlo simulations for type I errors and power (under certain deviations) for the test of independence. Simulations are run in C++ utilizing Rcpp. 
 
 ## Uniformity
 
-When numbers are recorded with sufficient precision, for a wide range of data generating processes, terminal digits are uniformly distributed. Deviations from this distribution could indicate data quality issues. `terminaldigits` utilizes Pearson's chi-squared test of goodness-of-fit to assess the hypothesis that terminal digits are uniformly distributed. Rather than rely on the asymptotic approximation to the chi-squared distribution, `terminaldigits` utilizes the simulated chi-squared GOF test from the package `discretefit`.
+When numbers are recorded with sufficient precision, for a wide range of data generating processes, terminal digits are uniformly distributed (Preece, 1981). For a generalization of Benford's law to terminal digits, see Hill (1995). Deviations uniformity could indicate data quality issues. `terminaldigits` utilizes Pearson's chi-squared test of goodness-of-fit to assess the hypothesis that terminal digits are uniformly distributed. Rather than rely on the asymptotic approximation to the chi-squared distribution, `terminaldigits` utilizes the simulated chi-squared GOF test from the package `discretefit`.
 
+Examples are based on a data set taken from the third round of a decoy experiment involving hand-washing purportedly carried out in a number of factories in China. For details, see `decoy` and Yu, Nelson, and Simonsohn (2018).
 
+```{r}
+td_uniformity(decoy$weight, decimals = 2)
+```
 
+## Independence
 
+Additionally, when numbers are recorded with sufficient precision, for a wide range of data generating processes, terminal digits are independent of preceding digits. Simonsohn expressed a version of this assumption in his procedure 'number bunching' (2019). Here the idea is formalized as a test of independence conducted on a contingency table constructed by counts for preceding digits and terminal digits. As a toy example, take the data set {1.1, 1.1, 1.2, 1.3, 1.3, 2.0, 2.1, 2.4}. Table 1 presents counts for each unique preceding digit and terminal digit.
 
+```{r echo=FALSE}
+Rows <- c(1, 2, "Total")
+Zero <- c(0, 1, 1)
+One <- c(2, 1, 3)
+Two <- c(1, 0, 1)
+Three <- c(2, 0, 2)
+Four <- c(0, 1, 1)
+Total <- c(5, 3, 8)
 
+data.frame(Rows, Zero, One, Two, Three, Four, Total) %>%
+  gt() %>%
+  tab_header(
+    title = "Contingecy table for toy data set"
+  ) %>%
+  tab_spanner(label = "Terminal Digit",
+              columns = c(Zero:Four)) %>%
+  cols_label(
+    Rows = "Preceding Digits",
+    Zero = "0",
+    One = "1",
+    Two = "2",
+    Three = "3",
+    Four = "4")
+```
 
+With fixed margins, the marginal probability for row $r_i$ equals the sum across each cell in $r_i$ divided by $n$, the total number of observations, and the margin for column $c_j$ equals the sum across each cell in $c_j$ divided by $n$. The expected fraction for cell $r_ic_j$ is the product of the marginal probability for $r_i$ and $c_j$. We express this expected fraction as $p_{ij}$ and the observed fraction as $q_{ij}$. 
 
+Having defined the expected distribution, we can compare the expected fractions to the observed fractions to assess the null hypothesis, that preceding digits (rows) are independent of terminal digits (columns). Formally, this hypothesis is expressed as follows:
 
+$$
+H_0: p_{ij} = q_{ij} \ for \ all  \ (i, j) \\ 
+H_1: p_{ij} \neq  q_{ij} \ for \ at \ least \ one \ (i, j)
+$$
+The function `td_independence` conducts this test utilizing one of the following four statistics. Pearson's chi-squared statistic:
+
+$$
+X^2 = n \sum_{i} \sum_j \frac{(q_{ij} - p_{ij})^2} {p_{ij}} \tag{8} 
+$$
+The log-likelihood ratio statistic, also referred to as $G^2$, is defined as follows under the convention that $q_{ij}$ ln($\frac{q_{ij}} {p_{ij}}$) = 0 when $q_{ij}$ = 0.
+
+$$ 
+G^2 = 2n \sum_{i} \sum_j q_{ij} \ln(\frac{q_{ij}} {p_{ij}}) 
+\tag{9}
+$$
+The Freeman-Tukey statistic, also referred to as Hellinger distance, is defined as follows.
+
+$$ FT = 4n \sum_{i} \sum_j (\sqrt{q_{ij}} - \sqrt{p_{ij}})^2 \tag{10}$$
+The root-mean-square statistic (see Perkins, William, Mark Tygert, and Rachel Ward, 2011).
+$$ RMS = \sqrt{N^{-1} \sum_{i} \sum_j (q_{ij} - p_{ij})^2} \tag{11} $$
+Asymptotically, the first three of these statistic approximate the chi-squared distribution with degrees of freedom $(r - 1) \times (c - 1)$ but as contingency tables generated under this procedure may be sparse, `td_independence` calculates p-values based Monte Carlo simulations under the null hypothesis. The algorithm introduced by Agresti, Wackerly, and Boyett (1979) is utilized. See also Boyett (1979).
+
+As an example, again take the `decoy` data set. There is strong evidence here that terminal digits are not independent of preceding digits.
+
+```{r}
+
+td_independence(decoy$weight, decimals = 2, reps = 10000)
+
+```
+
+## Simulations
+
+Some data generating process produce terminal digits that are dependent on preceding digits, e.g. normal distributions with small standard deviations recorded only to the first decimal place. In fact, the dependence of terminal digits (in some cases) is a corollary of Benford's law (Hill, 1995). Thus, care must be taken in applying the test of independence.
+
+One possibility is to simulate type I errors under a given data generating process. The `decoy` data approximates a normal distribution with a mean of ~54 and standard deviation of ~15.
+
+```{r echo=FALSE}
+
+d_mean <- mean(decoy$weight, na.rm = TRUE)
+d_sd <- sd(decoy$weight, na.rm = TRUE)
+
+decoy %>%
+  ggplot(aes(weight)) +
+  geom_histogram(bins = 20,
+                 aes(y = ..density..)) +
+  stat_function(fun = dnorm,
+                args = list(mean = d_mean,
+                            sd = d_sd),
+                col = "#1b98e0",
+                size = 1) +
+  ylab(NULL) +
+  xlab("Grams") +
+  labs(title = "Sanitizer Weight") +
+  theme_minimal() +
+   theme(plot.title = element_text(hjust = 0.5),
+      legend.title = element_blank())
+
+```
+
+The `td_simulate` function can draw samples from a normal distribution with the given mean and standard deviation. For each draw, the test of independence is applied. This provides type I errors. For the traditional significance level of 0.05, approximately 5 percent of draws should be statistically significant but not more.
+
+```{r}
+td_simulate("normal", n = 3235, 
+            parameter_1 = 54, 
+            parameter_2 = 14, 
+            decimals = 2,
+            significance = 0.05,
+            reps = 100,
+            simulations = 100)
+```
+
+These results suggest that the assumption of independence is appropriate for the specified data generating process though such a conclusion should be based on a much larger number of simulations.
+
+`td_simulate` can also be used to estimate power for deviations from independence introduced by (randomly) duplicating observations. For example, take the above specified data generating process and duplicate two percent of cases.
+
+```{r}
+td_simulate("normal", n = 3235, 
+            parameter_1 = 54, 
+            parameter_2 = 14, 
+            duplicates = 0.02,
+            decimals = 2,
+            significance = 0.05,
+            reps = 100,
+            simulations = 100)
+```
+These results suggest that the chi-squared test might be the most powerful test but again this would need to be confirmed through a larger number of simulations. 
+
+## References 
+
+Agresti, A., Wackerly, D., & Boyett, J. M. (1979). Exact conditional tests for cross-classifications: approximation of attained significance levels. Psychometrika, 44(1), 75-83.
+
+Boyett, J. M. (1979). Algorithm AS 144: Random r × c tables with
+given row and column totals. Journal of the Royal Statistical Society.
+Series C (Applied Statistics), 28(3), 329-332.
+
+Hill, T. P. (1995). The Significant-Digit Phenomenon. The American Mathematical Monthly, 102(4), 322–327. https://doi.org/10.2307/2974952 
+
+Perkins, W., Tygert, M., & Ward, R. (2011). Computing the confidence levels for a root-mean-square test of goodness-of-fit. Applied Mathematics and Computation, 217(22), 9072-9084. https://doi.org/10.1016/j.amc.2011.03.124
+
+Preece, D. A. (1981). Distributions of Final Digits in Data. Journal of the Royal Statistical Society. Series D (The Statistician), 30(1), 31–60. https://doi.org/10.2307/2987702
+
+Simonsohn, U. (2019, May 25). “Number-Bunching: A New Tool for Forensic Data Analysis.” DataColoda 77. http://datacolada.org/77 
+
+Yu, F., Nelson, L., & Simonsohn, U. (2018, December 5). “In Press at Psychological Science: A New 'Nudge' Supported by Implausible Data.” DataColoda 74. http://datacolada.org/74

@@ -1,6 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+
+
 // [[Rcpp::export]]
 
 List int_dec(NumericVector s,
@@ -22,11 +24,12 @@ List int_dec(NumericVector s,
 
   // Subtracting integers from sample to get decimals
 
-  IntegerVector dec_f = s_f - int_f;
+  NumericVector dec_f = Rcpp::abs(s_f - int_f);
+  IntegerVector dec_g = as<IntegerVector>(dec_f);
 
   List out = List::create(Named("s_f") = s_f,
-                          Named("int_f") = int_f,
-                          Named("dec_f") = dec_f);
+                          Named("int_f") = int_1,
+                          Named("dec_f") = dec_g);
 
   return out;
 
@@ -36,54 +39,70 @@ List int_dec(NumericVector s,
 
 // [[Rcpp::export]]
 
-IntegerVector full_vec(IntegerVector int_1,
-                       IntegerVector dec_1)  {
+IntegerVector observed_vec(IntegerVector u_int,
+                           IntegerVector u_dec,
+                           IntegerVector u_sam,
+                           IntegerVector tab_sam) {
 
-  IntegerVector int_uni_x = sort_unique(int_1);
-  IntegerVector dec_uni_x = sort_unique(dec_1);
-  IntegerVector int_vec_x = rep_each(int_uni_x, dec_uni_x.size());
-  IntegerVector dec_vec_x = rep(dec_uni_x, int_uni_x.size());
-  IntegerVector full_vec = int_vec_x + dec_vec_x;
+  IntegerVector neg_dec = Rcpp::clone(u_dec).sort(true);
 
-  return(full_vec);
+  int n_int = u_int.size();
+  int n_dec = u_dec.size();
+  int n_sam = u_sam.size();
+  int n = n_int * n_dec;
+  IntegerVector out(n);
 
-}
+  int count = 0;
+  int cc = 0;
 
+  for(int i = 0; i < n_int; ++i)  {
 
-// [[Rcpp::export]]
+    for(int j = 0; j < n_dec; ++j)  {
 
-NumericVector actual_frac(IntegerVector int_full,
-                          IntegerVector dec,
-                          int new_n)  {
+      int k = 0;
 
-  IntegerVector uni_1 = sort_unique(dec);
-  IntegerVector mat_0 = match(int_full, uni_1);
-  IntegerVector mat_1 = ifelse(is_na(mat_0), 0, mat_0);
+      if(u_int(i) >= 0)  {
 
-  IntegerVector tab_1 = table(dec);
-  NumericVector vector_1_bins(int_full.size());
+        k = (u_int(i) * 10) + u_dec(j);
 
-  for(int i = 0; i < int_full.size(); ++i)  {
+      }
 
-    if(mat_1(i) > 0) {
+      // So that with negative integers -1 and the decimal 2 leads to -12, not -8
 
-      vector_1_bins(i) = tab_1(mat_1(i) - 1);
+      else {
 
-    }
+        k = (u_int(i) * 10) - neg_dec(j);
 
-    else {
+      }
 
-      vector_1_bins(i) = 0;
+      if (cc >= n_sam) {
 
-    }
+        out(count) = 0;
+      }
 
+      else if (k == u_sam(cc)) {
+
+        out(count) = tab_sam(cc);
+
+        cc = cc + 1;
+
+      }
+
+      else {
+
+        out(count) = 0;
+
+      }
+
+      count = count + 1;
+
+      }
   }
 
-  NumericVector vec_1_frac = vector_1_bins / new_n;
 
-  return vec_1_frac;
+    return out;
+  }
 
-}
 
 // [[Rcpp::export]]
 
@@ -174,29 +193,4 @@ IntegerVector out_vector_cpp(IntegerVector c_sums)  {
 
 }
 
-
-
-// [[Rcpp::export]]
-
-List RCONT(int n,
-           IntegerVector r_sum,
-           IntegerVector c_sum)  {
-
-  List return_list(n);
-
-  IntegerVector v = out_vector_cpp(c_sum) + 1;
-
-  for(int i = 0; i < n; ++i)  {
-
-    IntegerVector x = perm_vector(v,
-                                  r_sum,
-                                  c_sum);
-
-    return_list[i] = x;
-
-  }
-
-  return(return_list);
-
-}
 

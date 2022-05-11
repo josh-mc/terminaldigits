@@ -49,12 +49,8 @@ int_dec <- function(s, decimals) {
     .Call('_terminaldigits_int_dec', PACKAGE = 'terminaldigits', s, decimals)
 }
 
-full_vec <- function(int_1, dec_1) {
-    .Call('_terminaldigits_full_vec', PACKAGE = 'terminaldigits', int_1, dec_1)
-}
-
-actual_frac <- function(int_full, dec, new_n) {
-    .Call('_terminaldigits_actual_frac', PACKAGE = 'terminaldigits', int_full, dec, new_n)
+observed_vec <- function(u_int, u_dec, u_sam, tab_sam) {
+    .Call('_terminaldigits_observed_vec', PACKAGE = 'terminaldigits', u_int, u_dec, u_sam, tab_sam)
 }
 
 tab_it <- function(x, bins, a, b) {
@@ -71,9 +67,5 @@ expected_cells <- function(r_frac, c_frac) {
 
 out_vector_cpp <- function(c_sums) {
     .Call('_terminaldigits_out_vector_cpp', PACKAGE = 'terminaldigits', c_sums)
-}
-
-RCONT <- function(n, r_sum, c_sum) {
-    .Call('_terminaldigits_RCONT', PACKAGE = 'terminaldigits', n, r_sum, c_sum)
 }
 

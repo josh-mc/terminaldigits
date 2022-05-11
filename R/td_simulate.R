@@ -66,6 +66,7 @@
 #' Boyett, J. M. (1979). Algorithm AS 144: Random r × c tables with
 #'     given row and column totals. Journal of the Royal Statistical Society.
 #'     Series C (Applied Statistics), 28(3), 329-332.
+#'
 #' @export
 #'
 #' @examples
@@ -136,20 +137,22 @@ td_simulate <- function(distribution,
 
   groups <- names(out)
 
+  dat <- data.frame(x = 0)
+
   for(i in groups)  {
 
-    out[[i]][1] <- mean(out[[i]] <= significance)
+    dat[[i]] <- mean(out[[i]] <= significance)
 
   }
 
   val <- list(method = "Monte Carlo simulations for independence of terminal digits",
               distribution = distribution,
-              Chisq = out$d_chi_p[1],
-              G2 = out$d_g2_p[1],
-              FT = out$d_ft_p[1],
-              RMS = out$d_rms_p[1],
-              O = out$d_perm_p[1],
-              AF = out$d_av_fre_p[1])
+              Chisq = dat$d_chi_p,
+              G2 = dat$d_g2_p,
+              FT = dat$d_ft_p,
+              RMS = dat$d_rms_p,
+              O = dat$d_perm_p,
+              AF = dat$d_av_fre_p)
 
   return(val)
 
