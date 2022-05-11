@@ -2,7 +2,7 @@
 title: "Package Introduction"
 output: rmarkdown::html_vignette
 author: Josh McCormick
-date: May 2, 2022
+date: May 11, 2022
 vignette: >
   %\VignetteIndexEntry{packages_introduction}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, warning=FALSE, message=FALSE}
 library(terminaldigits)
 library(dplyr)
 library(gt)
@@ -29,8 +29,7 @@ The package `terminaldigits` implements simulated tests of uniformity and indepe
 
 When numbers are recorded with sufficient precision, for a wide range of data generating processes, terminal digits are uniformly distributed (Preece, 1981). For a generalization of Benford's law to terminal digits, see Hill (1995). Deviations uniformity could indicate data quality issues. `terminaldigits` utilizes Pearson's chi-squared test of goodness-of-fit to assess the hypothesis that terminal digits are uniformly distributed. Rather than rely on the asymptotic approximation to the chi-squared distribution, `terminaldigits` utilizes the simulated chi-squared GOF test from the package `discretefit`.
 
-Examples are based on a data set taken from the third round of a decoy experiment involving hand-washing purportedly carried out in a
-number of factories in China. For details, see `decoy` and Yu, Nelson, and Simonsohn (2018).
+Examples are based on a data set taken from the third round of a decoy experiment involving hand-washing purportedly carried out in a number of factories in China. For details, see `decoy` and Yu, Nelson, and Simonsohn (2018).
 
 ```{r}
 td_uniformity(decoy$weight, decimals = 2)
@@ -40,7 +39,7 @@ td_uniformity(decoy$weight, decimals = 2)
 
 Additionally, when numbers are recorded with sufficient precision, for a wide range of data generating processes, terminal digits are independent of preceding digits. Simonsohn expressed a version of this assumption in his procedure 'number bunching' (2019). Here the idea is formalized as a test of independence conducted on a contingency table constructed by counts for preceding digits and terminal digits. As a toy example, take the data set {1.1, 1.1, 1.2, 1.3, 1.3, 2.0, 2.1, 2.4}. Table 1 presents counts for each unique preceding digit and terminal digit.
 
-```{r}
+```{r echo=FALSE}
 Rows <- c(1, 2, "Total")
 Zero <- c(0, 1, 1)
 One <- c(2, 1, 3)
@@ -94,24 +93,22 @@ Asymptotically, the first three of these statistic approximate the chi-squared d
 As an example, again take the `decoy` data set. There is strong evidence here that terminal digits are not independent of preceding digits.
 
 ```{r}
-bench::system_time(
-td_independence(decoy$weight, decimals = 2)
-)
+
+td_independence(decoy$weight, decimals = 2, reps = 10000)
+
 ```
 
 ## Simulations
 
-Some data generating process produce terminal digits that are dependent on preceding digits, e.g. normal distributions with small standard deviations (say 1 or 2) recorded only to the first decimal place. In fact, the dependence of terminal digits (in some cases) is a corollary of Benford's law (Hill, 1995). Thus, care must be taken in applying the test of independence.
+Some data generating process produce terminal digits that are dependent on preceding digits, e.g. normal distributions with small standard deviations recorded only to the first decimal place. In fact, the dependence of terminal digits (in some cases) is a corollary of Benford's law (Hill, 1995). Thus, care must be taken in applying the test of independence.
 
 One possibility is to simulate type I errors under a given data generating process. The `decoy` data approximates a normal distribution with a mean of ~54 and standard deviation of ~15.
 
-```{r}
+```{r echo=FALSE}
+
 d_mean <- mean(decoy$weight, na.rm = TRUE)
 d_sd <- sd(decoy$weight, na.rm = TRUE)
 
-```
-
-```{r}
 decoy %>%
   ggplot(aes(weight)) +
   geom_histogram(bins = 20,
@@ -132,7 +129,31 @@ decoy %>%
 
 The `td_simulate` function can draw samples from a normal distribution with the given mean and standard deviation. For each draw, the test of independence is applied. This provides type I errors. For the traditional significance level of 0.05, approximately 5 percent of draws should be statistically significant but not more.
 
+```{r}
+td_simulate("normal", n = 3235, 
+            parameter_1 = 54, 
+            parameter_2 = 14, 
+            decimals = 2,
+            significance = 0.05,
+            reps = 100,
+            simulations = 100)
+```
 
+These results suggest that the assumption of independence is appropriate for the specified data generating process though such a conclusion should be based on a much larger number of simulations.
+
+`td_simulate` can also be used to estimate power for deviations from independence introduced by (randomly) duplicating observations. For example, take the above specified data generating process and duplicate two percent of cases.
+
+```{r}
+td_simulate("normal", n = 3235, 
+            parameter_1 = 54, 
+            parameter_2 = 14, 
+            duplicates = 0.02,
+            decimals = 2,
+            significance = 0.05,
+            reps = 100,
+            simulations = 100)
+```
+These results suggest that the chi-squared test might be the most powerful test but again this would need to be confirmed through a larger number of simulations. 
 
 ## References 
 

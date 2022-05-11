@@ -2,6 +2,7 @@
 using namespace Rcpp;
 
 
+
 // [[Rcpp::export]]
 
 List int_dec(NumericVector s,
@@ -33,6 +34,8 @@ List int_dec(NumericVector s,
   return out;
 
 }
+
+
 
 // [[Rcpp::export]]
 
@@ -190,29 +193,4 @@ IntegerVector out_vector_cpp(IntegerVector c_sums)  {
 
 }
 
-
-
-// [[Rcpp::export]]
-
-List RCONT(int n,
-           IntegerVector r_sum,
-           IntegerVector c_sum)  {
-
-  List return_list(n);
-
-  IntegerVector v = out_vector_cpp(c_sum) + 1;
-
-  for(int i = 0; i < n; ++i)  {
-
-    IntegerVector x = perm_vector(v,
-                                  r_sum,
-                                  c_sum);
-
-    return_list[i] = x;
-
-  }
-
-  return(return_list);
-
-}
 

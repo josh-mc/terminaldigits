@@ -25,11 +25,13 @@
 #'    set for simulations in the `chisq.test` function from the `stats`
 #'    package in R.
 #'
-#' @return A list containing the following components:
+#' @return A list with class "htest" containing the following components:
 #'
 #' \item{statistic}{the value of the test statistic}
 #' \item{p_value}{the simulated p-value for the test}
-#' \item{test}{a character string identifying the test}
+#' \item{method}{a character string describing the test}
+#' \item{data.name}{a character string give the name of the data}
+#'
 #'
 #' @references
 #'
@@ -58,7 +60,7 @@ td_independence <- function(x,
                             test = "Chisq",
                             tolerance = 64 * .Machine$double.eps) {
 
-  if(class(x) != "numeric") {stop("The vector `x` must be numeric")}
+  if(!class(x) %in% c("numeric", "integer" )) {stop("The vector `x` must be numeric")}
 
   if (!(test %in% c("Chisq", "G2", "FT", "RMS"))) {
     stop("Specify a valid input for the test, i.e. 'Chisq', 'G2', 'FT', or 'RMS'.")}
@@ -67,9 +69,6 @@ td_independence <- function(x,
     stop("The 'reps' parameter requires a positive integer")
   }
 
-  if (reps < 10000) {
-    warning("For precise p-values, a minimum of 10,000 repetitions are recommended")
-  }
 
   DNAME <- deparse(substitute(x))
 

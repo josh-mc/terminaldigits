@@ -237,19 +237,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// RCONT
-List RCONT(int n, IntegerVector r_sum, IntegerVector c_sum);
-RcppExport SEXP _terminaldigits_RCONT(SEXP nSEXP, SEXP r_sumSEXP, SEXP c_sumSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type r_sum(r_sumSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type c_sum(c_sumSEXP);
-    rcpp_result_gen = Rcpp::wrap(RCONT(n, r_sum, c_sum));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_terminaldigits_dist_in", (DL_FUNC) &_terminaldigits_dist_in, 4},
@@ -269,7 +256,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_terminaldigits_perm_vector", (DL_FUNC) &_terminaldigits_perm_vector, 3},
     {"_terminaldigits_expected_cells", (DL_FUNC) &_terminaldigits_expected_cells, 2},
     {"_terminaldigits_out_vector_cpp", (DL_FUNC) &_terminaldigits_out_vector_cpp, 1},
-    {"_terminaldigits_RCONT", (DL_FUNC) &_terminaldigits_RCONT, 3},
     {NULL, NULL, 0}
 };
 

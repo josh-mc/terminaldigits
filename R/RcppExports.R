@@ -69,7 +69,3 @@ out_vector_cpp <- function(c_sums) {
     .Call('_terminaldigits_out_vector_cpp', PACKAGE = 'terminaldigits', c_sums)
 }
 
-RCONT <- function(n, r_sum, c_sum) {
-    .Call('_terminaldigits_RCONT', PACKAGE = 'terminaldigits', n, r_sum, c_sum)
-}
-
