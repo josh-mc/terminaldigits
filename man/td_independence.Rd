@@ -54,7 +54,7 @@ margins using algorithm ASA 144 (Agresti, Wackerly, and Boyett, 1979; Boyett 197
 }
 \examples{
 
-td_independence(decoy$weight, decimals = 2)
+td_independence(decoy$weight, decimals = 2, reps = 2000)
 
 }
 \references{

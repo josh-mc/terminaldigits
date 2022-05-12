@@ -37,7 +37,7 @@ function from the \code{discretefit} package to simulate the distribution under 
 }
 \examples{
 
-td_uniformity(decoy$weight, decimals = 2)
+td_uniformity(decoy$weight, decimals = 2, reps = 2000)
 
 
 }
